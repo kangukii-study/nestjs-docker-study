@@ -1,73 +1,24 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# NestJS에서 간단한 앱 도커라이징
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### Docker 사용 방법
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+```
+1. Dockerfile과 .dockerignore 파일 생성
+2. docker build . -t nestjs-docker-study
+3. docker container run -d -p 3000:3000 nestjs-docker-study
+4. docker stop <docker_names>
 ```
 
-## Running the app
+### Dockerfile의 속성들 분석
 
-```bash
-# development
-$ npm run start
+- `FROM`: image를 생성할 때 DockerHub에 있는 특정 이미지를 기반으로 이미지를 생성하겠다는 선언을 해주는 부분이다. 여기서 선언한 이미지는 `Base Image`라고 부른다. 이 프로젝트에서는 NestJS 기반이기 때문에 node를 베이스 이미지로 선언했다.
 
-# watch mode
-$ npm run start:dev
+- `WORKDIR`: RUN, CMD 명령어가 실행될 디렉토리를 설정하는 부분이다. Dockerfile에서 정의한 명령어를 실행하기 위해서 작업용 디렉토리를 미리 선언해준다고 생각하자.
 
-# production mode
-$ npm run start:prod
-```
+- `COPY`: 특정 파일을 도커 이미지에 추가한다. `COPY . .`가 의미하는 것은 WORKDIR로 지정한 위치에 현재 Dockerfile이 위치한 곳의 모든 파일을 복사한다는 의미이다.
 
-## Test
+- `RUN`: 베이스로 선언했던 이미지 위에 환경을 구축하기 위한 명령을 실행하는 것이다.
 
-```bash
-# unit tests
-$ npm run test
+- `EXPOSE`: 포트 설정 (이 도커이미지는 EXPOSE 포트를 외부에 공개할 예정이다 라는 뜻!)
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- `CMD`: 최종적으로 생성된 이미지에서 명령을 실행시킬 때 사용한다. Dockerfile 내에서는 1개의 CMD 속성만 사용할 수 있다.
